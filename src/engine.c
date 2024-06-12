@@ -31,9 +31,21 @@ ValueNode* add_child(ValueNode* head, Value* child) {
     return node;
 }
 
-
+/*
+* Add two values: a and b
+* Takes: values a,b != NULL
+* Returns: pointer to a new value being the sum of a and b
+*/
 Value* add(Value* a, Value* b) {
-    return;
+    assert(a != NULL);
+    assert(b != NULL);
+
+    Value* children = NULL;
+    children = add_child(children, a);
+    children = add_child(children, b);
+    Value* ret = create_value(a->data + b->data, children);
+    ret->backward = add_backward;
+    return ret;
 }
 
 Value* mul(Value* a, Value* b) {
@@ -72,6 +84,10 @@ void relu_backward(Value* this) {
     return;
 }
 
+/*
+* Prints the value
+* Takes: pointer to the value
+*/
 void print_value(Value* v) {
     return;
 }
