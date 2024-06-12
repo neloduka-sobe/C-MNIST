@@ -5,14 +5,32 @@
 #include <string.h>
 #include <assert.h>
 
-
-Value* create_value(double data, ValueNode* children, char* op) {
-    return;
+/*
+* Initialize the value
+* Takes: data to be stored in the node, pointer to the linked list of children
+* Returns: pointer to the value
+*/
+Value* create_value(double data, ValueNode* children) {
+    Value* v = (Value *) calloc(sizeof(Value), 1);
+    v->data = data;
+    v->grad = 0;
+    v->children = children;
+    v->backward = NULL;
+    return v;
 }
 
+/*
+* Add child to the linked list of children
+* Takes: head of the linked list, pointer to the child to be added
+* Returns: pointer to new head of the linked list
+*/
 ValueNode* add_child(ValueNode* head, Value* child) {
-    return;
+    ValueNode* node = (ValueNode*) calloc(sizeof(ValueNode), 1);
+    node->value = child;
+    node->next = head;
+    return node;
 }
+
 
 Value* add(Value* a, Value* b) {
     return;

@@ -6,7 +6,6 @@ typedef struct Value {
     double data;
     double grad;
     struct ValueNode* children; // Linked list of children
-    int children_count;
     void (*backward)(struct Value* this);
 } Value;
 
@@ -19,7 +18,7 @@ typedef struct ValueNode {
 // Function declarations
 
 // Operations on structure
-Value* create_value(double data, ValueNode* children, char* op);
+Value* create_value(double data, ValueNode* children);
 ValueNode* add_child(ValueNode* head, Value* child);
 
 // Operation on two structures in forward pass
