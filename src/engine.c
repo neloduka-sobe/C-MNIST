@@ -58,13 +58,30 @@ void print_value(Value* v) {
     return;
 }
 
+/*
+* Free the Value structure
+* Takes: Pointer to the Value
+*/
 void free_value(Value* v) {
+    assert(v != NULL);
+
+    // Free linked list
+    ValueNode *p = v->children;
+    while (p != NULL) {
+        free_value_node(p);
+    }
+    free(v);
     return;
 }
 
+/*
+* Free the ValueNode on adress at node
+* Takes: pointer to the ValueNode
+* Returns: pointer to the next node if exists, else NULL.
+*/
 ValueNode* free_value_node(ValueNode* node) {
     assert(node != NULL);
-    free_Value(node->value);
+    free_value(node->value);
     ValueNode* ret = node->next;
     free(node);
     return ret;
