@@ -118,10 +118,18 @@ Value* tanh(Value* a) {
     return ret;
 }
 
+/*
+*
+* Takes:
+*/
 void backward(Value* this) {
     return;
 }
 
+/*
+*
+* Takes:
+*/
 void build_topo(Value* v, Value** topo, int* topo_size, int* visited, int* visited_size) {
     return;
 }
