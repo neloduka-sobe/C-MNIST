@@ -37,8 +37,8 @@ ValueNode* add_child(ValueNode* head, Value* child) {
 * Returns: pointer to a new value being the sum of a and b
 */
 Value* add(Value* a, Value* b) {
-    assert(a != NULL);
-    assert(b != NULL);
+    assert(a);
+    assert(b);
 
     Value* children = NULL;
     children = add_child(children, a);
@@ -54,8 +54,8 @@ Value* add(Value* a, Value* b) {
 * Returns: pointer to a new value being the product of a and b
 */
 Value* mul(Value* a, Value* b) {
-    assert(a != NULL);
-    assert(b != NULL);
+    assert(a);
+    assert(b);
 
     Value* children = NULL;
     children = add_child(children, a);
@@ -71,7 +71,7 @@ Value* mul(Value* a, Value* b) {
 * Returns: pointer to a new value being equal to a^double
 */
 Value* pow(Value* a, double exponent) {
-    assert(a != NULL);
+    assert(a);
 
     Value* children = NULL;
     children = add_child(children, a);
@@ -101,6 +101,23 @@ Value* relu(Value* a) {
     return ret;
 }
 
+/*
+* Calculate tanh of the value
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to input with tanh applied
+*/
+Value* tanh(Value* a) {
+    assert(a);
+
+    Value* children = NULL;
+    children = add_child(children, a);
+    double x = a->data;
+    double t = tanh(x); //((exp(2+x)-1)/(exp(2+x)+1));
+    Value* ret = create_value(t, children);
+    ret->backward = tahn_backward;
+    return ret;
+}
+
 void backward(Value* this) {
     return;
 }
@@ -109,19 +126,58 @@ void build_topo(Value* v, Value** topo, int* topo_size, int* visited, int* visit
     return;
 }
 
+/*
+* Back propagation for addition
+* Takes: Value
+*/
 void add_backward(Value* this) {
+    assert(this);
+    // We are sure from implementation that there are two children
+    this->children->value->grad += this->grad;
+    this->children->next-value->grad += this->grad;
     return;
 }
 
+/*
+* Back propagation for multiplication
+* Takes: Value
+*/
 void mul_backward(Value* this) {
+    asert(this);
+    // We are sure from implementation that there are two children
+    this->children->value->grad += this->children->next->value->data * this->grad;
+    this->children->next->value->grad += this->children->value->data * this->grad;
     return;
 }
 
+/*
+* Back propagation for exponentiation
+* Takes: Value
+*/
 void pow_backward(Value* this) {
+    assert(this);
+    double exponent = this->children->next->value->data;
+    this->children->value->grad += (exponent * pow(this->children->value->data, exponent - 1)) * this->grad;
     return;
 }
 
+/*
+* Back propagation for ReLU
+* Takes: Value
+*/
 void relu_backward(Value* this) {
+    assert(this);
+    this->children->value->grad += (this->data > 0) * this->grad;
+    return;
+}
+
+/*
+* Back propagation for tanh
+* Takes: Value
+*/
+void tanh_backward(Value* this) {
+    assert(this);
+    this->children->value->grad += (1-pow(this->data, 2)) * this->grad;
     return;
 }
 
@@ -130,7 +186,7 @@ void relu_backward(Value* this) {
 * Takes: pointer to the value
 */
 void print_value(Value* v) {
-    assert(v != NULL);
+    assert(v);
     printf("Data: %d\n", v->data);
     printf("Grad: %d\n", v->grad);
     printf("Children:");
@@ -147,7 +203,7 @@ void print_value(Value* v) {
 * Takes: Pointer to the Value
 */
 void free_value(Value* v) {
-    assert(v != NULL);
+    assert(v);
 
     // Free linked list
     ValueNode *p = v->children;
@@ -164,7 +220,7 @@ void free_value(Value* v) {
 * Returns: pointer to the next node if exists, else NULL.
 */
 ValueNode* free_value_node(ValueNode* node) {
-    assert(node != NULL);
+    assert(node);
     free_value(node->value);
     ValueNode* ret = node->next;
     free(node);

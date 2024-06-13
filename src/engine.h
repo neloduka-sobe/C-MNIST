@@ -26,6 +26,7 @@ Value* add(Value* a, Value* b);
 Value* mul(Value* a, Value* b);
 Value* pow(Value* a, double exponent);
 Value* relu(Value* a);
+Value* tanh(Value* a);
 
 // Operations for backward pass
 void backward(Value* this);
@@ -34,6 +35,7 @@ void add_backward(Value* this);
 void mul_backward(Value* this);
 void pow_backward(Value* this);
 void relu_backward(Value* this);
+void* tanh_backward(Value* this;
 
 void print_value(Value* v);
 void free_value(Value* v);
