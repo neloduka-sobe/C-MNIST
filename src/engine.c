@@ -4,6 +4,8 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_blas.h>
 
 /*
 * Initialize the value
