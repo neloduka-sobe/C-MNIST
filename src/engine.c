@@ -130,6 +130,15 @@ void relu_backward(Value* this) {
 * Takes: pointer to the value
 */
 void print_value(Value* v) {
+    assert(v != NULL);
+    printf("Data: %d\n", v->data);
+    printf("Grad: %d\n", v->grad);
+    printf("Children:");
+    ValueNode* p = v->children; 
+    while (p != NULL) {
+        print_value(p->value);
+        p = p->next;
+    }
     return;
 }
 
