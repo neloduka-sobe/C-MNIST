@@ -135,6 +135,46 @@ Value* tangenth(Value* a) {
 }
 
 /*
+* Calculate softmax of the value
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to input with softmax applied
+*/
+Value* softmax(Value* a) {
+    // TODO
+    return;
+}
+
+/*
+* Calculate logarithm of the value
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to input with logarithm applied
+*/
+Value* logarithm(Value* a) {
+    // TODO
+    return;
+}
+
+/*
+* Calculate matrix multiplication of the values
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to matrix multiplication of a and b
+*/
+Value* matrix_mul(Value* a, Value* b) {
+    // TODO
+    return;
+}
+
+/*
+* Calculate the sum of elements acrros dimensions of a tensor
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to the sum of elements across dimensions of a tensor, and axis to determine axis along which we calculate it (0 or 1)
+*/
+Value* reduce_sum(Value* a, int axis) {
+    // TODO
+    return;
+}
+
+/*
 * Calculate backward prop for the value
 * Takes: pointer to a value
 */
@@ -239,6 +279,42 @@ void tangenth_backward(Value* this) {
 }
 
 /*
+* Back propagation for softmax
+* Takes: Value
+*/
+void softmax_backward(Value* this) {
+    // TODO
+    return;
+}
+
+/*
+* Back propagation for logarithm
+* Takes: Value
+*/
+void logarithm_backward(Value* this) {
+    // TODO
+    return;
+}
+
+/*
+* Back propagation for matrix_mul
+* Takes: Value
+*/
+void matrix_mul_backward(Value* this) {
+    // TODO
+    return;
+}
+
+/*
+* Back propagation for reduce_sum
+* Takes: Value
+*/
+void reduce_sum_backward(Value* this) {
+    // TODO
+    return;
+}
+
+/*
 * Prints the value
 * Takes: pointer to the value
 */
@@ -254,6 +330,7 @@ void print_value(Value* v) {
     }
     return;
 }
+
 
 /*
 * Free the Value structure
