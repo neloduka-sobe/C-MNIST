@@ -55,7 +55,7 @@ Value* add(Value* a, Value* b) {
     assert(a);
     assert(b);
 
-    Value* children = NULL;
+    ValueNode* children = NULL;
     children = add_child(children, a);
     children = add_child(children, b);
     Value* ret = create_value(a->data + b->data, children);
@@ -72,7 +72,7 @@ Value* mul(Value* a, Value* b) {
     assert(a);
     assert(b);
 
-    Value* children = NULL;
+    ValueNode* children = NULL;
     children = add_child(children, a);
     children = add_child(children, b);
     Value* ret = create_value(a->data * b->data, children);
@@ -85,14 +85,15 @@ Value* mul(Value* a, Value* b) {
 * Takes: value a != NULL
 * Returns: pointer to a new value being equal to a^double
 */
-Value* pow(Value* a, double exponent) {
+Value* power(Value* a, double exponent) {
     assert(a);
 
-    Value* children = NULL;
+    ValueNode* children = NULL;
     children = add_child(children, a);
-    children = add_child(children, exponent);
+    Value* e = create_value(exponent, NULL);
+    children = add_child(children, e);
     Value* ret = create_value(pow(a->data, exponent), children);
-    ret->backward = pow_backward;
+    ret->backward = power_backward;
     return ret;
 }
 
@@ -102,8 +103,8 @@ Value* pow(Value* a, double exponent) {
 * Returns: pointer to a new value being equal to input with ReLU applied
 */
 Value* relu(Value* a) {
-    Value* children = NULL;
-    chilldren = add_child(children, a);
+    ValueNode* children = NULL;
+    children = add_child(children, a);
 
     Value* ret = NULL;
     if (a->data < 0) {
@@ -121,15 +122,15 @@ Value* relu(Value* a) {
 * Takes: value a != NULL
 * Returns: pointer to a new value being equal to input with tanh applied
 */
-Value* tanh(Value* a) {
+Value* tangenth(Value* a) {
     assert(a);
 
-    Value* children = NULL;
+    ValueNode* children = NULL;
     children = add_child(children, a);
     double x = a->data;
     double t = tanh(x); //((exp(2+x)-1)/(exp(2+x)+1));
     Value* ret = create_value(t, children);
-    ret->backward = tahn_backward;
+    ret->backward = tangenth_backward;
     return ret;
 }
 
@@ -149,8 +150,8 @@ void backward(Value* this) {
 
     ValueNode* p = topo;
     while (p != NULL) {
-        if (current->value->backward != NULL) {
-            current->value->backward(current_value);
+        if (p->value->backward != NULL) {
+            p->value->backward(p->value);
         }
         p = p->next;
     }
@@ -177,7 +178,7 @@ void build_topo(Value* v, ValueNode** topo, ValueNode** visited) {
         p = p->next;
     }
 
-    *topo = add_to_list(*topo, v);
+    *topo = add_child(*topo, v);
 
     return;
 }
@@ -190,7 +191,7 @@ void add_backward(Value* this) {
     assert(this);
     // We are sure from implementation that there are two children
     this->children->value->grad += this->grad;
-    this->children->next-value->grad += this->grad;
+    this->children->next->value->grad += this->grad;
     return;
 }
 
@@ -199,7 +200,7 @@ void add_backward(Value* this) {
 * Takes: Value
 */
 void mul_backward(Value* this) {
-    asert(this);
+    assert(this);
     // We are sure from implementation that there are two children
     this->children->value->grad += this->children->next->value->data * this->grad;
     this->children->next->value->grad += this->children->value->data * this->grad;
@@ -210,7 +211,7 @@ void mul_backward(Value* this) {
 * Back propagation for exponentiation
 * Takes: Value
 */
-void pow_backward(Value* this) {
+void power_backward(Value* this) {
     assert(this);
     double exponent = this->children->next->value->data;
     this->children->value->grad += (exponent * pow(this->children->value->data, exponent - 1)) * this->grad;
@@ -231,7 +232,7 @@ void relu_backward(Value* this) {
 * Back propagation for tanh
 * Takes: Value
 */
-void tanh_backward(Value* this) {
+void tangenth_backward(Value* this) {
     assert(this);
     this->children->value->grad += (1-pow(this->data, 2)) * this->grad;
     return;
@@ -243,8 +244,8 @@ void tanh_backward(Value* this) {
 */
 void print_value(Value* v) {
     assert(v);
-    printf("Data: %d\n", v->data);
-    printf("Grad: %d\n", v->grad);
+    printf("Data: %f\n", v->data);
+    printf("Grad: %f\n", v->grad);
     printf("Children:");
     ValueNode* p = v->children; 
     while (p != NULL) {
