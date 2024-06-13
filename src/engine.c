@@ -30,6 +30,21 @@ ValueNode* add_child(ValueNode* head, Value* child) {
     node->next = head;
     return node;
 }
+/*
+* Check is value in a linked list
+* Takes: pointer to a linked list, pointer to value
+* Returns: 1 if value in linked list, 0 otherwise
+*/
+int in_linked_list(ValueNode* head, Value* v) {
+    ValueNode* p = head;
+    while (p != NULL) {
+        if (p->value == v) {
+            return 1;
+        }
+        p = p->next;
+    }
+    return 0;
+}
 
 /*
 * Add two values: a and b
@@ -119,18 +134,51 @@ Value* tanh(Value* a) {
 }
 
 /*
-*
-* Takes:
+* Calculate backward prop for the value
+* Takes: pointer to a value
 */
 void backward(Value* this) {
+    assert(this);
+
+    ValueNode* topo = NULL;
+    ValueNode* visited = NULL;
+
+    build_topo(this, &topo, &visited);
+
+    this->grad = 1.0;
+
+    ValueNode* p = topo;
+    while (p != NULL) {
+        if (current->value->backward != NULL) {
+            current->value->backward(current_value);
+        }
+        p = p->next;
+    }
+
+    free_value_node(topo);
+    free_value_node(visited);
     return;
 }
 
 /*
-*
-* Takes:
+* Populate the linked list with pointers n topological order
+* Takes: value v, to calculate, linked list of pointers in topological order, linked list of visited nodes pointers
 */
-void build_topo(Value* v, Value** topo, int* topo_size, int* visited, int* visited_size) {
+void build_topo(Value* v, ValueNode** topo, ValueNode** visited) {
+    if (in_linked_list(*visited, v)) {
+        return;
+    }
+
+    *visited = add_child(*visited, v);
+
+    ValueNode* p = v->children;
+    while (p != NULL) {
+        build_topo(p->value, topo, visited);
+        p = p->next;
+    }
+
+    *topo = add_to_list(*topo, v);
+
     return;
 }
 
