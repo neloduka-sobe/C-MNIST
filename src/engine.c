@@ -7,8 +7,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_blas.h>
 
-/*
-* Initialize the value
+/* * Initialize the value
 * Takes: data to be stored in the node, pointer to the linked list of children
 * Returns: pointer to the value
 */
@@ -162,6 +161,15 @@ Value* logarithm(Value* a) {
 * Returns: pointer to a new value being equal to matrix multiplication of a and b
 */
 Value* matrix_mul(Value* a, Value* b) {
+    assert(a);
+    assert(b);
+
+    size_t a_rows = a->data->size1;
+    size_t a_cols = a->data->size2;
+    size_t b_rows = b->data->size1;
+    size_t b_cols = b->data->size2;
+    assert(a_cols == b_rows);
+    Value* ret = create_value
     // TODO
     return;
 }
