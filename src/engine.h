@@ -24,7 +24,7 @@ ValueNode* add_child(ValueNode* head, Value* child);
 // Operation on two structures in forward pass
 Value* add(Value* a, Value* b);
 Value* mul(Value* a, Value* b);
-Value* pow_val(Value* a, double exponent);
+Value* pow(Value* a, double exponent);
 Value* relu(Value* a);
 
 // Operations for backward pass

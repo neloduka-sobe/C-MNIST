@@ -48,16 +48,57 @@ Value* add(Value* a, Value* b) {
     return ret;
 }
 
+/*
+* Multiply two values: a and b
+* Takes: values a,b != NULL
+* Returns: pointer to a new value being the product of a and b
+*/
 Value* mul(Value* a, Value* b) {
-    return; 
+    assert(a != NULL);
+    assert(b != NULL);
+
+    Value* children = NULL;
+    children = add_child(children, a);
+    children = add_child(children, b);
+    Value* ret = create_value(a->data * b->data, children);
+    ret->backward = mul_backward;
+    return ret;
 }
 
-Value* pow_val(Value* a, double exponent) {
-    return;
+/*
+* Take value to the power of exponent
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to a^double
+*/
+Value* pow(Value* a, double exponent) {
+    assert(a != NULL);
+
+    Value* children = NULL;
+    children = add_child(children, a);
+    children = add_child(children, exponent);
+    Value* ret = create_value(pow(a->data, exponent), children);
+    ret->backward = pow_backward;
+    return ret;
 }
 
+/*
+* Calculate ReLU of the value
+* Takes: value a != NULL
+* Returns: pointer to a new value being equal to input with ReLU applied
+*/
 Value* relu(Value* a) {
-    return;
+    Value* children = NULL;
+    chilldren = add_child(children, a);
+
+    Value* ret = NULL;
+    if (a->data < 0) {
+       ret = create_value(0, children);
+    }
+    else {
+       ret = create_value(a->data, children);
+
+    }
+    return ret;
 }
 
 void backward(Value* this) {
