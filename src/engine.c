@@ -4,8 +4,8 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_blas.h>
+//#include <gsl/gsl_matrix.h>
+//#include <gsl/gsl_blas.h>
 
 /* * Initialize the value
 * Takes: data to be stored in the node, pointer to the linked list of children
@@ -139,27 +139,26 @@ Value* tangenth(Value* a) {
 * Calculate softmax of the value
 * Takes: value a != NULL
 * Returns: pointer to a new value being equal to input with softmax applied
-*/
 Value* softmax(Value* a) {
     // TODO
     return;
 }
+*/
 
 /*
 * Calculate logarithm of the value
 * Takes: value a != NULL
 * Returns: pointer to a new value being equal to input with logarithm applied
-*/
 Value* logarithm(Value* a) {
     // TODO
     return;
 }
+*/
 
 /*
 * Calculate matrix multiplication of the values
 * Takes: value a != NULL
 * Returns: pointer to a new value being equal to matrix multiplication of a and b
-*/
 Value* matrix_mul(Value* a, Value* b) {
     assert(a);
     assert(b);
@@ -173,16 +172,17 @@ Value* matrix_mul(Value* a, Value* b) {
     // TODO
     return;
 }
+*/
 
 /*
-* Calculate the sum of elements acrros dimensions of a tensor
+* Calculate the sum of elements acrros dimensions of a matrix
 * Takes: value a != NULL
-* Returns: pointer to a new value being equal to the sum of elements across dimensions of a tensor, and axis to determine axis along which we calculate it (0 or 1)
-*/
+* Returns: pointer to a new value being equal to the sum of elements across dimensions of a matrix, and axis to determine axis along which we calculate it (0 or 1)
 Value* reduce_sum(Value* a, int axis) {
     // TODO
     return;
 }
+*/
 
 /*
 * Calculate backward prop for the value
@@ -291,38 +291,38 @@ void tangenth_backward(Value* this) {
 /*
 * Back propagation for softmax
 * Takes: Value
-*/
 void softmax_backward(Value* this) {
     // TODO
     return;
 }
+*/
 
 /*
 * Back propagation for logarithm
 * Takes: Value
-*/
 void logarithm_backward(Value* this) {
     // TODO
     return;
 }
+*/
 
 /*
 * Back propagation for matrix_mul
 * Takes: Value
-*/
 void matrix_mul_backward(Value* this) {
     // TODO
     return;
 }
+*/
 
 /*
 * Back propagation for reduce_sum
 * Takes: Value
-*/
 void reduce_sum_backward(Value* this) {
     // TODO
     return;
 }
+*/
 
 /*
 * Prints the value
