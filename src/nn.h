@@ -52,5 +52,5 @@ ValueNode* layer_parameters(Layer *layer);
 // MLP functions
 MLP* create_MLP(int nin, int *nouts, int n_layers);
 Value call_MLP(MLP *mlp, ValueNode *x, int x_size);
-ValueNode* MLP_parameters(MLP *mlp, int *param_size);
+ValueNode* MLP_parameters(MLP *mlp);
 #endif

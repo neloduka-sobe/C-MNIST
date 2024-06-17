@@ -156,8 +156,13 @@ MLP* create_MLP(int nin, int *nouts, int n_layers) {
 * Returns: Value for the MLP evaluated for x
 */
 Value call_MLP(MLP *mlp, ValueNode *x, int x_size) {
-    // TODO
-    return;
+    Value* ret = x;
+    LayerNode* layer_node = mlp->layers;
+    for (int i = 0; i < mlp->n_layers; i++) {
+        ret = &calllayer(layer_node, x, layer_node->nout);
+        layer_node = layer_node->next;
+    }
+    return *ret;
 }
 
 /*
@@ -165,7 +170,7 @@ Value call_MLP(MLP *mlp, ValueNode *x, int x_size) {
 * Takes: pointer to the mlp, pointer to array of sizes of parameters
 * Returns: Values of the parameters of MLP
 */
-ValueNode* MLP_parameters(MLP *mlp, int *param_size) {
+ValueNode* MLP_parameters(MLP *mlp) {
     // TODO
     return;
 }
