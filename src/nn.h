@@ -47,7 +47,7 @@ ValueNode* neuron_parameters(Neuron *neuron);
 // Layer functions
 Layer* create_layer(int nin, int nout, bool nonlin);
 Value call_layer(Layer *layer, ValueNode *x, int x_size);
-ValueNode* layer_parameters(Layer *layer, int *param_size);
+ValueNode* layer_parameters(Layer *layer);
 
 // MLP functions
 MLP* create_MLP(int nin, int *nouts, int n_layers);

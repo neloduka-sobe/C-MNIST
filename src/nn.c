@@ -109,9 +109,20 @@ Value call_layer(Layer *layer, ValueNode *x, int x_size) {
 * Takes: Pointer to a layer, pointer to number of the parameters
 * Returns: Pointer to parameters of a layer
 */
-ValueNode* layer_parameters(Layer *layer, int *param_size) {
-    // TODO
-    return;
+ValueNode* layer_parameters(Layer *layer) {
+    ValueNode* params = NULL;
+    NeuronNode* p = layer->neurons;
+    while (p != NULL) {
+        ValueNode* neuron_params = neuron_parameters(p->value);
+        ValueNode* node = neuron_params;
+        while (node != NULL) {
+            parms = add_child(params, node->value);
+            node = node->next;
+
+        }
+        p = p->next;
+    }
+    return params;
 }
 
 /*
