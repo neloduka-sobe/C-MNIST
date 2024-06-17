@@ -13,6 +13,7 @@
 */
 Value* create_value(double data, ValueNode* children) {
     Value* v = (Value *) calloc(sizeof(Value), 1);
+    assert(v);
     v->data = data;
     v->grad = 0;
     v->children = children;
@@ -27,6 +28,7 @@ Value* create_value(double data, ValueNode* children) {
 */
 ValueNode* add_child(ValueNode* head, Value* child) {
     ValueNode* node = (ValueNode*) calloc(sizeof(ValueNode), 1);
+    assert(node);
     node->value = child;
     node->next = head;
     return node;

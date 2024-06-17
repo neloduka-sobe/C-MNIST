@@ -18,7 +18,18 @@ double rand_double() {
 * Returns: Pointer to a Neuron
 */
 Neuron* create_neuron(int nin, bool nonlin) {
-    return;
+    assert(nin > 0);
+    Neuron* neuron = (Neuron*) calloc(sizeof(Neuron), 1);
+    assert(neuron);
+    neuron->w = NULL;
+    for (int i = 0; i < nin; i++) {
+        Value* v = create_value(rand_double(), NULL);
+        neuron->w = add_child(neuron->w, v);
+    }
+
+    neuron->b = create_value(0.0, NULL);
+    neuron->nonlin = nonlin;
+    return neuron;
 }
 
 /*
