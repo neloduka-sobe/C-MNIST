@@ -41,16 +41,16 @@ double rand_double();
 
 // Neuron functions
 Neuron* create_neuron(int nin, bool nonlin);
-Value call_neuron(Neuron *neuron, Value *x);
+Value call_neuron(Neuron *neuron, ValueNode *x);
 ValueNode* neuron_parameters(Neuron *neuron, int *param_size);
 
 // Layer functions
 Layer* create_layer(int nin, int nout, bool nonlin);
-Value call_layer(Layer *layer, Value *x, int x_size);
+Value call_layer(Layer *layer, ValueNode *x, int x_size);
 ValueNode* layer_parameters(Layer *layer, int *param_size);
 
 // MLP functions
 MLP* create_MLP(int nin, int *nouts, int n_layers);
-Value call_MLP(MLP *mlp, Value *x, int x_size);
+Value call_MLP(MLP *mlp, ValueNode *x, int x_size);
 ValueNode* MLP_parameters(MLP *mlp, int *param_size);
 #endif
