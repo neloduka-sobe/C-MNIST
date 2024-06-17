@@ -42,7 +42,7 @@ double rand_double();
 // Neuron functions
 Neuron* create_neuron(int nin, bool nonlin);
 Value call_neuron(Neuron *neuron, ValueNode *x);
-ValueNode* neuron_parameters(Neuron *neuron, int *param_size);
+ValueNode* neuron_parameters(Neuron *neuron);
 
 // Layer functions
 Layer* create_layer(int nin, int nout, bool nonlin);
