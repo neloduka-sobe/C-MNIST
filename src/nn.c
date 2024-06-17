@@ -131,8 +131,23 @@ ValueNode* layer_parameters(Layer *layer) {
 * Returns: Pointer to MLP object
 */
 MLP* create_MLP(int nin, int *nouts, int n_layers) {
-    // TODO
-    return;
+    MLP* mlp = (MLP*) calloc(sizeof(MLP), 1);
+    assert(mlp);
+    mlp->layers = NULL;
+    int input_size = nin;
+    for (int i = 0; i < n_layers; i++) {
+        Layer* layer = create_layer(input_size, nouts[i], i != n_layers-1);
+        LayerNode* layer_node = (LayerNode*) calloc(sizeof(LayerNode), 1);
+        assert(layer_node);
+
+        layer_node->value = layer;
+        layer_node->next = mlp->layers;
+        mlp->layers = layer_node;
+        input_size = nouts[i];
+
+    }
+    mlp->n_layers = n_layers;
+    return mlp;
 }
 
 /*
