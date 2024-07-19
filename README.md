@@ -1,9 +1,5 @@
-# C-MNIST
-MNIST Neural Network in C
-
-## TODO
-[ ] Finish implementing micrograd with NN and create easy neural network
-[ ] Modify the microrad to work on matrices
+# C-NN
+Neural Network in C from scratch
 
 ## Acknowledgements
 Based on [Andrej Karpathy](https://karpathy.ai/)'s [micrograd](https://github.com/karpathy/micrograd)
