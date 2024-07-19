@@ -158,35 +158,6 @@ Value* logarithm(Value* a) {
 */
 
 /*
-* Calculate matrix multiplication of the values
-* Takes: value a != NULL
-* Returns: pointer to a new value being equal to matrix multiplication of a and b
-Value* matrix_mul(Value* a, Value* b) {
-    assert(a);
-    assert(b);
-
-    size_t a_rows = a->data->size1;
-    size_t a_cols = a->data->size2;
-    size_t b_rows = b->data->size1;
-    size_t b_cols = b->data->size2;
-    assert(a_cols == b_rows);
-    Value* ret = create_value
-    // TODO
-    return;
-}
-*/
-
-/*
-* Calculate the sum of elements acrros dimensions of a matrix
-* Takes: value a != NULL
-* Returns: pointer to a new value being equal to the sum of elements across dimensions of a matrix, and axis to determine axis along which we calculate it (0 or 1)
-Value* reduce_sum(Value* a, int axis) {
-    // TODO
-    return;
-}
-*/
-
-/*
 * Calculate backward prop for the value
 * Takes: pointer to a value
 */
@@ -303,24 +274,6 @@ void softmax_backward(Value* this) {
 * Back propagation for logarithm
 * Takes: Value
 void logarithm_backward(Value* this) {
-    // TODO
-    return;
-}
-*/
-
-/*
-* Back propagation for matrix_mul
-* Takes: Value
-void matrix_mul_backward(Value* this) {
-    // TODO
-    return;
-}
-*/
-
-/*
-* Back propagation for reduce_sum
-* Takes: Value
-void reduce_sum_backward(Value* this) {
     // TODO
     return;
 }

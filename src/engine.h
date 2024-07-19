@@ -35,8 +35,6 @@ Value* relu(Value* a);
 Value* tangenth(Value* a);
 Value* softmax(Value* a);
 Value* logarithm(Value* a);
-Value* matrix_mul(Value* a, Value* b);
-Value* reduce_sum(Value* a, int axis);
 
 // Operations for backward pass
 void backward(Value* this);
@@ -48,7 +46,5 @@ void relu_backward(Value* this);
 void tangenth_backward(Value* this);
 void softmax_backward(Value* this);
 void logarithm_backward(Value* this);
-void matrix_mul_backward(Value* this);
-void reduce_sum_backward(Value* this);
 
 #endif
