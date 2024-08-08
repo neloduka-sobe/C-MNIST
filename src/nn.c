@@ -1,8 +1,9 @@
 #include "nn.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
+#include <stdbool.h>
 #include <time.h>
+#include <assert.h>
 
 /*
 * Return random double between -1 and 1
@@ -19,15 +20,14 @@ double rand_double() {
 */
 Neuron* create_neuron(int nin, bool nonlin) {
     assert(nin > 0);
-    Neuron* neuron = (Neuron*) calloc(sizeof(Neuron), 1);
+    Neuron* neuron = (Neuron*)calloc(sizeof(Neuron), 1);
     assert(neuron);
     neuron->w = NULL;
     for (int i = 0; i < nin; i++) {
         Value* v = create_value(rand_double(), NULL);
         neuron->w = add_child(neuron->w, v);
     }
-
-    neuron->b = create_value(0.0, NULL);
+    neuron->b = create_value(rand_double(), NULL);
     neuron->nonlin = nonlin;
     neuron->nin = nin;
     return neuron;
@@ -39,14 +39,13 @@ Neuron* create_neuron(int nin, bool nonlin) {
 * Returns: Value with the evaluated neuron
 */
 Value call_neuron(Neuron* neuron, ValueNode* x) {
-    // TODO check 
     Value* act = neuron->b;
     ValueNode* w_node = neuron->w;
-
+    ValueNode* input_node = x;
     for (int i = 0; i < neuron->nin; i++) {
-        act = add(act, mul(w_node->value, x->value->data));
+        act = add(act, mul(w_node->value, input_node->value));
         w_node = w_node->next;
-        x = x->next;
+        input_node = input_node->next;
     }
     if (neuron->nonlin) {
         return *relu(act);
@@ -60,7 +59,7 @@ Value call_neuron(Neuron* neuron, ValueNode* x) {
 * Takes: Pointer to a neuron, number of parameters in a neuron
 * Returns: Pointer to parameters of Neuron
 */
-ValueNode* neuron_parameters(Neuron *neuron) {
+ValueNode* neuron_parameters(Neuron* neuron) {
     ValueNode* params = NULL;
     ValueNode* p = neuron->w;
     while (p != NULL) {
@@ -72,25 +71,23 @@ ValueNode* neuron_parameters(Neuron *neuron) {
 }
 
 /*
-* Creates a leyer
+* Creates a layer
 * Takes: nin - number of inputs, nout - number of outputs, nonlin - if nonlinear
 * Returns: Pointer to a layer
 */
 Layer* create_layer(int nin, int nout, bool nonlin) {
-    Layer* layer (Layer*) calloc(sizeof(Layer), 1);
+    Layer* layer = (Layer*)calloc(sizeof(Layer), 1);
     assert(layer);
     layer->neurons = NULL;
     for (int i = 0; i < nout; i++) {
         Neuron* neuron = create_neuron(nin, nonlin);
-        NeuronNode* neuron_node = (NeuronNode*) calloc(sizeof(NeuronNode), 1);
+        NeuronNode* neuron_node = (NeuronNode*)calloc(sizeof(NeuronNode), 1);
         assert(neuron_node);
         neuron_node->value = neuron;
         neuron_node->next = layer->neurons;
         layer->neurons = neuron_node;
-
     }
     layer->nout = nout;
-
     return layer;
 }
 
@@ -99,9 +96,15 @@ Layer* create_layer(int nin, int nout, bool nonlin) {
 * Takes: Layer pointer, value for which to evaluate, size of the input
 * Returns: Value returned by evaluation of the layer
 */
-Value call_layer(Layer *layer, ValueNode *x, int x_size) {
-    // TODO
-    return;
+Value call_layer(Layer* layer, ValueNode* x, int x_size) {
+    Value* ret = create_value(0.0, NULL);
+    NeuronNode* neuron_node = layer->neurons;
+    while (neuron_node != NULL) {
+        Value neuron_out = call_neuron(neuron_node->value, x);
+        ret = add(ret, &neuron_out);
+        neuron_node = neuron_node->next;
+    }
+    return *ret;
 }
 
 /*
@@ -109,16 +112,15 @@ Value call_layer(Layer *layer, ValueNode *x, int x_size) {
 * Takes: Pointer to a layer, pointer to number of the parameters
 * Returns: Pointer to parameters of a layer
 */
-ValueNode* layer_parameters(Layer *layer) {
+ValueNode* layer_parameters(Layer* layer) {
     ValueNode* params = NULL;
     NeuronNode* p = layer->neurons;
     while (p != NULL) {
         ValueNode* neuron_params = neuron_parameters(p->value);
         ValueNode* node = neuron_params;
         while (node != NULL) {
-            parms = add_child(params, node->value);
+            params = add_child(params, node->value);
             node = node->next;
-
         }
         p = p->next;
     }
@@ -130,21 +132,19 @@ ValueNode* layer_parameters(Layer *layer) {
 * Takes: Number of inputs, array of outputs, number of layers
 * Returns: Pointer to MLP object
 */
-MLP* create_MLP(int nin, int *nouts, int n_layers) {
-    MLP* mlp = (MLP*) calloc(sizeof(MLP), 1);
+MLP* create_MLP(int nin, int* nouts, int n_layers) {
+    MLP* mlp = (MLP*)calloc(sizeof(MLP), 1);
     assert(mlp);
     mlp->layers = NULL;
     int input_size = nin;
     for (int i = 0; i < n_layers; i++) {
-        Layer* layer = create_layer(input_size, nouts[i], i != n_layers-1);
-        LayerNode* layer_node = (LayerNode*) calloc(sizeof(LayerNode), 1);
+        Layer* layer = create_layer(input_size, nouts[i], i != n_layers - 1);
+        LayerNode* layer_node = (LayerNode*)calloc(sizeof(LayerNode), 1);
         assert(layer_node);
-
         layer_node->value = layer;
         layer_node->next = mlp->layers;
         mlp->layers = layer_node;
         input_size = nouts[i];
-
     }
     mlp->n_layers = n_layers;
     return mlp;
@@ -152,17 +152,20 @@ MLP* create_MLP(int nin, int *nouts, int n_layers) {
 
 /*
 * Calls the MLP
-* Takes: Pointer to te MLP, Value for which to evaluate, and size of the input
+* Takes: Pointer to the MLP, Value for which to evaluate, and size of the input
 * Returns: Value for the MLP evaluated for x
 */
-Value call_MLP(MLP *mlp, ValueNode *x, int x_size) {
-    Value* ret = x;
+Value call_MLP(MLP* mlp, ValueNode* x, int x_size) {
+    ValueNode* input = x;
     LayerNode* layer_node = mlp->layers;
-    for (int i = 0; i < mlp->n_layers; i++) {
-        ret = &calllayer(layer_node, x, layer_node->nout);
+    while (layer_node != NULL) {
+        Value layer_out = call_layer(layer_node->value, input, layer_node->value->nout);
+        input = add_child(NULL, &layer_out);
         layer_node = layer_node->next;
     }
-    return *ret;
+    Value result = *input->value;
+    free_value_node(input);
+    return result;
 }
 
 /*
@@ -170,7 +173,17 @@ Value call_MLP(MLP *mlp, ValueNode *x, int x_size) {
 * Takes: pointer to the mlp, pointer to array of sizes of parameters
 * Returns: Values of the parameters of MLP
 */
-ValueNode* MLP_parameters(MLP *mlp) {
-    // TODO
-    return;
+ValueNode* MLP_parameters(MLP* mlp) {
+    ValueNode* params = NULL;
+    LayerNode* layer_node = mlp->layers;
+    while (layer_node != NULL) {
+        ValueNode* layer_params = layer_parameters(layer_node->value);
+        ValueNode* node = layer_params;
+        while (node != NULL) {
+            params = add_child(params, node->value);
+            node = node->next;
+        }
+        layer_node = layer_node->next;
+    }
+    return params;
 }
